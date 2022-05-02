@@ -1,0 +1,134 @@
+[meta title:"Final_project_part3" description:"Short description of your project" /]
+
+[Header
+  fullWidth:true
+  title:"What Causes Depression?"
+  subtitle:"Final Project Part 3 for IS 445"
+  author:"Jialin Guo"
+  authorLink:""
+  date:"May 1, 2022"
+  background:"#222222"
+  color:"#ffffff"
+   /]
+
+# Why people get depressed?
+
+There's no single cause of depression. It can occur for a variety of reasons and it has many different triggers.
+
+For some people, an upsetting or stressful life event, such as bereavement, divorce, illness, redundancy and job or money worries, can be the cause.
+
+Different causes can often combine to trigger depression. For example, you may feel low after being ill and then experience a traumatic event, such as a bereavement, which brings on depression.
+
+Some studies have also suggested that a series of factors suchas stressful events, personality, family history, loneliness may constitute depression.
+
+[Link to the source webpage](https://www.nhs.uk/mental-health/conditions/clinical-depression/causes/)
+
+[img 
+  src:'\static\images\stormseeker.jpg' 
+  style:`{height:'900px'}` 
+/]
+Photo by Stormseeker on Unsplash
+
+# Depression dataset
+
+Here we have a dataset. This dataset contains 39775 responds, including the information about each repondents' Depression Anxiety Stress Scales answers and demographic information.
+
+For visualization purpose, some columns in the dataset were aggregated, and a subset of 10000 rows was made.
+
+[data name:"depression" source:"data4.csv" /]
+
+We can check out our data really quick with an interactive table:
+
+[Table data:depression /]
+
+# Age -- Overview
+
+Let's make a scater plot to have a conceptual view of the data and have some interaction with it.
+
+[var name:"smallestAge" value:0 /]
+[var name:"largestAge" value:100 /]
+
+[IdyllVegaLite data:depression spec:`{
+  width: 550,
+  height: 400,
+  transform:[{filter:{field:"age", "lte":largestAge}},
+             {filter:{field:"age", "gte":smallestAge}}],
+  mark: "circle",
+  encoding: {
+    x: {field: "age", type: "quantitative", title:"Age"}, 
+    y: {field: "depression_total_score", type: "quantitative", title:"Depression Total Score"},
+    color: {field: 'gender', type: 'nominal'}
+  }
+}` /]
+
+[section] // format the sliders into their own section */
+Smallest Age: 0 [Range min:0 max:largestAge value:smallestAge /] 100
+
+Largest Age: 0 [Range min:smallestAge max:100 value:largestAge /] 100
+[/section]
+
+You can use the age slider to control the x axis. (1=Male, 2=Female, 3=Other)
+
+We can see from the plot that there is a tendency that when people get older, they will have lower depression score, which
+means they are less likely to get depressed. The blue dots represent male and the orange dots represent female. 
+We can see that this tendency is more obvious among men than women.
+
+# Gender, Orientation and Education
+
+First, let's make a plot to have a intuitive sense whether people of certain gender are more likely to suffer from depression.
+
+[var name:"colorBy3" value:`{}` /]
+
+[IdyllVegaLite data:depression spec:`{
+  width: 400,
+  height: 200,
+  mark: "bar",
+  encoding: {
+    x: {field: "gender", type: "nominal", title:"Gender"},
+    y: {field:"depression_total_score", aggregate:"average", type: "quantitative", title:"Average Depression Total Score"}, 
+    opacity: {value: 0.7}
+  }
+}` /]
+
+"What is your gender?" 1=Male, 2=Female, 3=Other
+
+From the plots, we can see that by gender, the *other* column has highest score among three types of gender. 
+And male's depression score is lowest.
+
+Then let's see the other two interesting domain, orientation and education.
+
+[var name:"colorBy3" value:`{}` /]
+
+[IdyllVegaLite data:depression spec:`{
+  width: 400,
+  height: 200,
+  mark: "bar",
+  encoding: {
+    x: {field: "orientation", type: "nominal",  title:"Orientation"},
+    y: {field:"depression_total_score", aggregate:"average", type: "quantitative", title:"Average Depression Total Score"}, 
+    opacity: {value: 0.7},
+    width: {step: 5}
+  }
+}` /]
+
+"What is your sexual orientation?", 1=Heterosexual, 2=Bisexual, 3=Homosexual, 4=Asexual, 5=Other
+
+People who are heterosexual have lowest average depression score. And those who are bisexual have highest score. Minority groups take on more stress, are at greater risk of depression.
+
+[var name:"colorBy3" value:`{}` /]
+
+[IdyllVegaLite data:depression spec:`{
+  width: 400,
+  height: 200,
+  mark: "bar",
+  encoding: {
+    x: {field: "education", type: "nominal",  title:"Education"},
+    y: {field:"depression_total_score", aggregate:"average", type: "quantitative", title:"Average Depression Total Score"}, 
+    opacity: {value: 0.7}
+  }
+}` /]
+
+"How much education have you completed?", 1=Less than high school, 2=High school, 3=University degree, 4=Graduate degree
+
+By education, the risk of depression tends to decrease when educational attainment increases.
+Less educated people are exposed to higher risk of depression.
